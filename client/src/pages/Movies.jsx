@@ -102,24 +102,21 @@ function Movies() {
                         </div>
                         {/* loading more */}
                         <div className="w-full flex-rows gap-6 md:my-20 my-10 ">
-                            {page === 1 || (
-                                <button
-                                    onClick={prevPage}
-                                    disabled={page === 1}
-                                    className="text-white py-2 px-3 rounded font-semibold transitions border-2 border-subMain bg-dry hover:bg-subMain"
-                                >
-                                    <TbPlayerTrackPrev className="text-xl" />
-                                </button>
-                            )}
-                            {page === pages || (
-                                <button
-                                    onClick={nextPage}
-                                    disabled={page === pages}
-                                    className="text-white py-2 px-3 rounded font-semibold transitions border-2 border-subMain bg-dry hover:bg-subMain"
-                                >
-                                    <TbPlayerTrackNext className="text-xl" />
-                                </button>
-                            )}
+                            <button
+                                onClick={prevPage}
+                                disabled={page === 1}
+                                className="text-white py-2 px-3 rounded font-semibold transitions border-2 border-subMain bg-dry hover:bg-subMain"
+                            >
+                                <TbPlayerTrackPrev className="text-xl" />
+                            </button>
+
+                            <button
+                                onClick={nextPage}
+                                disabled={page === pages}
+                                className="text-white py-2 px-3 rounded font-semibold transitions border-2 border-subMain bg-dry hover:bg-subMain"
+                            >
+                                <TbPlayerTrackNext className="text-xl" />
+                            </button>
                         </div>
                     </>
                 ) : (

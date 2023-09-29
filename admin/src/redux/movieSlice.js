@@ -16,6 +16,8 @@ const initialState = {
     //get movie by id
     movie: null,
 
+    category: [],
+
     casts: [],
 };
 
@@ -133,6 +135,16 @@ const movieSlice = createSlice({
         resetCast(state) {
             state.casts = [];
         },
+        // apply category
+        addCategory(state, action) {
+            state.category.push(action.payload);
+        },
+        deleteCategory(state, action) {
+            state.category = state.category.filter((cate) => cate.categoryId !== action.payload);
+        },
+        resetCategory(state) {
+            state.category = [];
+        },
     },
 });
 
@@ -162,6 +174,8 @@ export const {
     createMovieFail,
     createMovieRequest,
     createMovieSucces,
+    deleteCategory,
+    addCategory,
 } = movieSlice.actions;
 //all movie
 export const getMoviesAction = () => async (dispatch) => {
@@ -226,6 +240,7 @@ export const createMovieAction = (movie) => async (dispatch) => {
         dispatch(createMovieSucces(response));
         toast.success('New Movie created!');
         dispatch(deleteAllCastAction());
+        dispatch(deleteAllCategoryAction());
     } catch (error) {
         dispatch(createMovieFail(error));
     }
@@ -261,6 +276,23 @@ export const editCastAction = (cast) => async (dispatch, getState) => {
 export const deleteAllCastAction = () => async (dispatch) => {
     dispatch(resetCast());
     localStorage.removeItem('casts');
+};
+
+//add category
+export const addCategoryAction = (cate) => async (dispatch, getState) => {
+    dispatch(addCategory(cate));
+    localStorage.setItem('category', JSON.stringify(getState().movie.category));
+};
+//remove category
+export const removeCategoryAction = (id) => async (dispatch, getState) => {
+    dispatch(deleteCategory(id));
+    localStorage.setItem('category', JSON.stringify(getState().movie.category));
+};
+
+//delete all cast
+export const deleteAllCategoryAction = () => async (dispatch) => {
+    dispatch(removeCategoryAction());
+    localStorage.removeItem('category');
 };
 
 export default movieSlice.reducer;

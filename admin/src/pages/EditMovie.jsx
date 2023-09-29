@@ -15,19 +15,26 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { movieValidation } from '../validation/movieValidation';
-import { createMovieAction, editMovieAction, getMovieByIdAction, removeCastAction } from '../redux/movieSlice';
+import {
+    createMovieAction,
+    editMovieAction,
+    getMovieByIdAction,
+    removeCastAction,
+    removeCategoryAction,
+} from '../redux/movieSlice';
 import toast from 'react-hot-toast';
 import ImagePreview from '../components/ImagePreview';
 import { getAllCategoryAction } from '../redux/categorySlice';
+import SelectModal from '../components/modals/SelectModal';
 
 const EditMovie = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const { categories } = useSelector((state) => state.category);
-    const { isLoading, error, casts, movie } = useSelector((state) => state.movie);
+    const { isLoading, error, casts, movie, category } = useSelector((state) => state.movie);
 
     const [openModal, setOpenModal] = useState(false);
+    const [openModalCategory, setOpenModalCategory] = useState(false);
     const [cast, setCast] = useState(null);
     const [imageWithoutTitle, setImageWithoutTitle] = useState('');
     const [imageTitle, setImageTitle] = useState('');
@@ -52,7 +59,7 @@ const EditMovie = () => {
             video: videoUrl,
             casts: casts.length > 0 ? casts : movie?.casts,
         };
-        // console.log(movieData);
+        console.log(movieData);
         dispatch(editMovieAction(movie?._id, movieData));
         navigate('/movielist');
     };
@@ -61,7 +68,10 @@ const EditMovie = () => {
         dispatch(removeCastAction(id));
         toast.success('Cast deleted!');
     };
-
+    const deleteCategoryHandle = (id) => {
+        dispatch(removeCategoryAction(id));
+        toast.success('Category deleted!');
+    };
     useEffect(() => {
         dispatch(getAllCategoryAction());
         if (movie?._id !== id) {
@@ -71,7 +81,6 @@ const EditMovie = () => {
             setValue('time', movie?.time);
             setValue('language', movie?.language);
             setValue('year', movie?.year);
-            setValue('category', movie?.category);
             setValue('overview', movie?.overview);
             setImageTitle(movie?.image);
             setImageWithoutTitle(movie?.titleImage);
@@ -85,6 +94,7 @@ const EditMovie = () => {
     return (
         <Sidebar>
             <CastModal openModal={openModal} setOpenModal={setOpenModal} cast={cast} />
+            <SelectModal openModal={openModalCategory} setOpenModal={setOpenModalCategory} />
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
                 <h2 className="text-2xl font-semibold text-white ">Edit {`"${movie?.name}"`}</h2>
                 <div className="w-full grid md:grid-cols-2 gap-6">
@@ -154,15 +164,30 @@ const EditMovie = () => {
                     {errors.overview && <InlineError text={errors.overview.message} />}
                 </div>
                 {/* category */}
-                <div className="text-sm w-full">
-                    <Select
-                        label="Movie Category"
-                        options={categories?.length ? categories : []}
-                        name="category"
-                        register={register('category')}
-                    />
-                    {errors.category && <InlineError text={errors.category.message} />}
+                <div className="w-full grid lg:grid-cols-2 gap-6 items-start">
+                    <button
+                        type="button"
+                        onClick={() => setOpenModalCategory(true)}
+                        className="w-full bg-main py-4 border border-subMain border-dashed text-white rounded"
+                    >
+                        Add category
+                    </button>
+                    <div className="grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-4 grid-cols-2 gap-4">
+                        {category?.map((cate, i) => (
+                            <div key={i} className="flex-rows mt-2 w-full gap-2 border-2 border-border rounded-md py-2">
+                                {cate?.name}
+                                <button
+                                    type="button"
+                                    onClick={() => deleteCategoryHandle(cate?.categoryId)}
+                                    className="text-subMain border border-border p-1 rounded"
+                                >
+                                    <MdDelete />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
+
                 {/* Movie video */}
                 <div className="w-full flex flex-col gap-2">
                     <p className="text-sm text-border font-semibold">Movie video</p>

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
-import {  FaEdit } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ const Rows = (movie, field, onDeleteHandle) => {
                 </div>
             </td>
             <td className={`${Text} truncate`}>{movie?.name} </td>
-            <td className={`${Text}`}>{movie?.category} </td>
+            <td className={`${Text}`}>{movie?.category[0].name} </td>
             <td className={`${Text}`}>{movie?.language} </td>
             <td className={`${Text}`}>{movie?.year} </td>
             <td className={`${Text} text-center`}>{movie?.time} </td>

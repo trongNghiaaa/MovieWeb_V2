@@ -22,7 +22,7 @@ function FlexMovieItem({ movie }) {
     return (
         <>
             <div className="flex items-center gap-5 text-dryGray flex-wrap ">
-                <span>{movie?.category}</span>
+                <span>{movie?.category[0].name}</span>
                 <div className="flex items-center gap-2">
                     <SlCalender />
                     <span>{movie?.year}</span>

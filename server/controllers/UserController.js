@@ -195,6 +195,7 @@ export const getLikedMovies = asyncHandle(async (req, res, next) => {
             throw new Error('User not found');
         }
 
+        // res.status(200).json(user);
         res.status(200).json(user.likedMovies);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -269,3 +270,4 @@ export const deleteUser = asyncHandle(async (req, res, next) => {
         res.status(400).json({ error: error.message });
     }
 });
+

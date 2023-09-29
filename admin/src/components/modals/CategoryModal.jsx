@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-
 import MainModal from './MainModal';
 
 import { Input } from '../UsedInput';

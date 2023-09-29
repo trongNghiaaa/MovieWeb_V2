@@ -37,10 +37,14 @@ const MovieSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        category: {
-            type: String,
-            required: true,
-        },
+        category: [
+            {
+                name: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
         language: {
             type: String,
             required: true,

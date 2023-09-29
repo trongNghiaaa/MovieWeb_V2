@@ -1,6 +1,7 @@
 import asyncHandle from 'express-async-handler';
 import Movie from '../models/MoviesModel.js';
 import { movies } from '../data/movie.js';
+import { moviesCate } from '../data/movieCate.js';
 
 //////////// PUBLIC
 // IMPORT DATA: POST /api/movies/import
@@ -9,7 +10,8 @@ export const importMovies = asyncHandle(async (req, res, next) => {
         // làm trống hết các bảng movie
         await Movie.deleteMany();
         // thêm movie vào DB
-        const movieList = await Movie.insertMany(movies);
+        // const movieList = await Movie.insertMany(movies);
+        const movieList = await Movie.insertMany(moviesCate);
         res.status(200).json(movieList);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -17,13 +19,56 @@ export const importMovies = asyncHandle(async (req, res, next) => {
 });
 
 // GET ALL MOVIES : GET /api/movies
+// export const getMovies = asyncHandle(async (req, res, next) => {
+//     try {
+//         // lọc theo category, time , language, rate year và search
+//         const { category, time, language, rate, year, search } = req.query;
+
+//         let query = {
+//             ...(category && { category }),
+//             ...(time && { time }),
+//             ...(language && { language }),
+//             ...(rate && { rate }),
+//             ...(year && { year }),
+//             ...(search && { name: { $regex: search, $options: 'i' } }),
+//         };
+
+//         // phân trang và load thêm
+//         const page = Number(req.query.page) || 1; // mặc định trang đầu tiên nếu không yêu cầu page
+//         const limit = 8; // 8 movie 1 page
+//         const skip = (page - 1) * limit; // bỏ qua 4 movie 1 page
+
+//         // find movie theo query , limit
+//         const movies = await Movie.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
+
+//         // lấy số lượng movie tìm thấy
+//         const count = await Movie.countDocuments(query);
+
+//         // gửi res về client
+//         res.status(200).json({
+//             totalMovie: count, // tổng số movie tìm được
+//             page, // trang thứ bao nhiêu
+//             pages: Math.ceil(count / limit), // tổng số trang tìm được
+//             movies,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
+
 export const getMovies = asyncHandle(async (req, res, next) => {
     try {
-        // lọc theo category, time , language, rate year và search
         const { category, time, language, rate, year, search } = req.query;
+        const requestedCategories = category ? category.split(',') : [];
+        console.log(requestedCategories)
 
-        let query = {
-            ...(category && { category }),
+        // Tạo điều kiện tìm kiếm danh mục
+        const categoryQuery =
+            requestedCategories.length > 0 ? { category: { $elemMatch: { name: { $in: requestedCategories } } } } : {};
+
+        // Tạo truy vấn chung cho các điều kiện khác
+        const query = {
+            ...categoryQuery,
             ...(time && { time }),
             ...(language && { language }),
             ...(rate && { rate }),
@@ -31,22 +76,21 @@ export const getMovies = asyncHandle(async (req, res, next) => {
             ...(search && { name: { $regex: search, $options: 'i' } }),
         };
 
-        // phân trang và load thêm
-        const page = Number(req.query.page) || 1; // mặc định trang đầu tiên nếu không yêu cầu page
-        const limit = 8; // 8 movie 1 page
-        const skip = (page - 1) * limit; // bỏ qua 4 movie 1 page
+        // Phân trang và load thêm
+        const page = Number(req.query.page) || 1;
+        const limit = 8;
+        const skip = (page - 1) * limit;
 
-        // find movie theo query , limit
+        // Tìm các bộ phim thỏa mãn truy vấn
         const movies = await Movie.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
-        // lấy số lượng movie tìm thấy
+        // Lấy tổng số bộ phim tìm thấy
         const count = await Movie.countDocuments(query);
 
-        // gửi res về client
         res.status(200).json({
-            totalMovie: count, // tổng số movie tìm được
-            page, // trang thứ bao nhiêu
-            pages: Math.ceil(count / limit), // tổng số trang tìm được
+            totalMovie: count,
+            page,
+            pages: Math.ceil(count / limit),
             movies,
         });
     } catch (error) {
@@ -212,7 +256,7 @@ export const createMovie = asyncHandle(async (req, res, next) => {
             overview,
             titleImage,
             image,
-            category,
+            category: category,
             language,
             year,
             time,
