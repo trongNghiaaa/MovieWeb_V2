@@ -18,9 +18,9 @@ function SingleMovies() {
     const dispatch = useDispatch();
     const { movies, movie } = useSelector((state) => state.movie);
 
-    const related = movies.filter((m) => m.category === movie?.category);
+    const related = movies.filter((m) => m.category[0].name === movie?.category[0].name);
     useEffect(() => {
-        dispatch(getMovieByIdAction(id ));
+        dispatch(getMovieByIdAction(id));
         dispatch(getMoviesAction());
     }, [dispatch, id]);
     console.log(movie);

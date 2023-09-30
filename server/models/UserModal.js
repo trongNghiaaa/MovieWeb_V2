@@ -28,7 +28,6 @@ const UserSchema = new mongoose.Schema(
                 ref: 'Movie',
             },
         ],
-        passwordChangeAt: Date, // 2023-01-01
         googleId: {
             type: String,
         },

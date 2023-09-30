@@ -44,14 +44,18 @@ function MovieList() {
                             <button
                                 onClick={prevPage}
                                 disabled={page === 1}
-                                className="text-white py-1 px-3 rounded font-semibold transitions border-2 border-subMain bg-dry hover:bg-subMain"
+                                className={`py-2 px-3 rounded font-semibold transitions border-2 border-subMain   ${
+                                    page === 1 ? 'bg-white text-black ' : 'bg-dry text-white hover:bg-subMain'
+                                }`}
                             >
                                 <TbPlayerTrackPrev className="text-xl" />
                             </button>
                             <button
                                 onClick={nextPage}
                                 disabled={page === pages}
-                                className="text-white py-1 px-3 rounded font-semibold transitions border-2 border-subMain bg-dry hover:bg-subMain"
+                                className={` py-2 px-3 rounded font-semibold transitions border-2 border-subMain   ${
+                                    page === pages ? 'bg-white text-black ' : 'bg-dry text-white hover:bg-subMain'
+                                }`}
                             >
                                 <TbPlayerTrackNext className="text-xl" />
                             </button>

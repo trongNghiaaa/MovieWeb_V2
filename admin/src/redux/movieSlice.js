@@ -126,7 +126,7 @@ const movieSlice = createSlice({
             state.casts.push(action.payload);
         },
         editCast(state, action) {
-            const updateCast = state.casts.map((cast) => (cast.id === action.payload.id ? action.payload : cast));
+            const updateCast = state.casts.map((cast) => (cast.castId === action.payload.castId ? action.payload : cast));
             state.casts = updateCast;
         },
         deleteCast(state, action) {

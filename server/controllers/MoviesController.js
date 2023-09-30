@@ -60,7 +60,6 @@ export const getMovies = asyncHandle(async (req, res, next) => {
     try {
         const { category, time, language, rate, year, search } = req.query;
         const requestedCategories = category ? category.split(',') : [];
-        console.log(requestedCategories)
 
         // Tạo điều kiện tìm kiếm danh mục
         const categoryQuery =
