@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
             {
                 type: Schema.ObjectId,
                 ref: 'Movie',
-            },
+            }, 
         ],
         googleId: {
             type: String,
