@@ -19,7 +19,7 @@ function MovieList() {
     }, [error, dispatch]);
 
     const handleDeleteMovie = (id) => {
-        dispatch(deleteMovieAction(id));
+        window.confirm('Are you sure you want to delete this movie!') && dispatch(deleteMovieAction(id));
     };
 
     // phân trang

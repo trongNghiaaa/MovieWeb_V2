@@ -1,5 +1,11 @@
 import Axios from './axios';
 
+//get all user
+const getAllUser = async () => {
+    const { data } = await Axios.get('/users');
+    return data;
+};
+
 // resgister user API call
 const registerService = async (user) => {
     const { data } = await Axios.post('/users/register', user);
@@ -86,6 +92,7 @@ const likeMovieService = async (movieId, token) => {
 };
 
 export {
+    getAllUser,
     registerService,
     loginService,
     loginGoogleService,

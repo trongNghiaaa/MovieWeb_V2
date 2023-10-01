@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { ErrorAction, tokenProtection } from './protection';
 
 const initialState = {
+    users: [],
     isLoading: false,
     success: false,
     error: null,
@@ -17,6 +18,20 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        //get all user
+        getAllUserRequest(state) {
+            state.isLoading = true;
+        },
+        getAllUserSucces(state, action) {
+            state.isLoading = false;
+            state.users = action.payload;
+            state.success = true;
+            state.error = null;
+        },
+        getAllUserFail(state, action) {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
         //register
         userRegisterRequest(state) {
             state.isLoading = true;
@@ -162,6 +177,9 @@ const authSlice = createSlice({
 
 // action
 export const {
+    getAllUserRequest,
+    getAllUserFail,
+    getAllUserSucces,
     userRegisterRequest,
     userRegisterSucces,
     userRegisterFail,
@@ -193,6 +211,17 @@ export const {
     deleteFavoriteRequest,
     deleteFavoriteSucces,
 } = authSlice.actions;
+
+//getAllUser
+export const getAllUserAction = () => async (dispatch) => {
+    try {
+        dispatch(getAllUserRequest());
+        const response = await userServices.getAllUser();
+        dispatch(getAllUserSucces(response));
+    } catch (error) {
+        dispatch(getAllUserFail(error));
+    }
+};
 
 //login
 export const loginAction = (datas) => async (dispatch) => {
