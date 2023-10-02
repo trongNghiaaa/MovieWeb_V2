@@ -181,7 +181,7 @@ export const createMovieReview = asyncHandle(async (req, res, next) => {
         // tăng số lượng review
         movie.numberOfReview = movie.review.length;
         // tính lại số lượng rate
-        movie.rate = movie.review.reduce((acc, cur) => cur.rating + acc, 0) / movie.review.length;
+        movie.rate = Math.ceil(movie.review.reduce((acc, cur) => cur.rating + acc, 0) / movie.review.length);
         //lưa vào DB
         await movie.save();
 
